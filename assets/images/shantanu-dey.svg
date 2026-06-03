@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" role="img" aria-label="Shantanu Dey portrait placeholder">
+  <rect width="300" height="400" fill="#e8e6e2"/>
+  <rect x="16" y="16" width="268" height="368" rx="6" fill="none" stroke="#999" stroke-width="1"/>
+  <text x="150" y="205" text-anchor="middle" font-family="Garamond, serif" font-size="14" letter-spacing="0.2em" fill="#888">PORTRAIT</text>
+</svg>
