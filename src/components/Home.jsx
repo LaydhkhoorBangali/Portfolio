@@ -1,19 +1,12 @@
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion';
 import { useEffect } from 'react';
-import Projects from './Projects.jsx';
 
 const title = 'Shantanu Dey';
 const MOBILE_HERO = '/assets/images/shantanu-dey.jpg';
 const MOBILE_FALLBACK = '/assets/images/shantanu-dey.svg';
 const DESKTOP_HERO = '/assets/images/shantanu_pc.jpeg';
 
-function scrollToGallery() {
-  const gallery = document.getElementById('work');
-  if (!gallery) return;
-  gallery.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-export default function Home({ onOpenProject, scrollToWork }) {
+export default function Home({ onNavigate }) {
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
   const xPct = useSpring(mouseX, { stiffness: 45, damping: 22 });
@@ -33,12 +26,6 @@ export default function Home({ onOpenProject, scrollToWork }) {
     window.addEventListener('pointermove', onMove);
     return () => window.removeEventListener('pointermove', onMove);
   }, [mouseX, mouseY]);
-
-  useEffect(() => {
-    if (!scrollToWork) return undefined;
-    const timer = window.setTimeout(scrollToGallery, 80);
-    return () => window.clearTimeout(timer);
-  }, [scrollToWork]);
 
   return (
     <div className="home-page">
@@ -98,22 +85,19 @@ export default function Home({ onOpenProject, scrollToWork }) {
             >
               Filmmaker · Director · Cinematographer
             </motion.p>
-
           </div>
 
           <button
             type="button"
             className="home-scroll-hint"
-            onClick={scrollToGallery}
-            aria-label="Scroll to project gallery"
+            onClick={() => onNavigate('gallery')}
+            aria-label="Open gallery"
           >
-            <span>Scroll</span>
+            <span>Gallery</span>
             <span className="home-scroll-line" aria-hidden="true" />
           </button>
         </div>
       </section>
-
-      <Projects onOpenProject={onOpenProject} />
     </div>
   );
 }

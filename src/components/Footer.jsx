@@ -35,6 +35,17 @@ export default function Footer({ onNavigate }) {
           <motion.p className="footer-index" variants={fadeUp} custom={0.05}>
             Contact
           </motion.p>
+          <motion.div className="footer-emails" variants={fadeUp} custom={0.12}>
+            <a
+              className="footer-email"
+              href="mailto:shantanudeywork@gmail.com"
+            >
+              shantanudeywork@gmail.com
+            </a>
+            <a className="footer-email" href="mailto:shadesofakir@gmail.com">
+              shadesofakir@gmail.com
+            </a>
+          </motion.div>
         </motion.div>
 
         <motion.div

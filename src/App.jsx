@@ -2,11 +2,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import CursorGlow from './components/CursorGlow.jsx';
 import Footer from './components/Footer.jsx';
+import Gallery from './components/Gallery.jsx';
 import Grain from './components/Grain.jsx';
 import Header from './components/Header.jsx';
 import Home from './components/Home.jsx';
 import Info from './components/Info.jsx';
-import ProjectDetail from './components/ProjectDetail.jsx';
 
 const pageTransition = {
   initial: { opacity: 0, y: 28, filter: 'blur(8px)' },
@@ -26,25 +26,13 @@ const pageTransition = {
 
 export default function App() {
   const [view, setView] = useState('home');
-  const [activeProject, setActiveProject] = useState(null);
-  const [scrollToWork, setScrollToWork] = useState(0);
 
   const navigate = (target) => {
-    if (target === 'work') {
-      if (view !== 'home') {
-        setView('home');
-      }
-      setScrollToWork((value) => value + 1);
-      return;
-    }
-
     setView(target);
 
-    if (target === 'home') {
-      window.requestAnimationFrame(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
-    }
+    window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
   };
 
   return (
@@ -67,23 +55,14 @@ export default function App() {
             animate="animate"
             exit="exit"
           >
-            {view === 'home' && (
-              <Home
-                onOpenProject={setActiveProject}
-                scrollToWork={scrollToWork}
-              />
-            )}
+            {view === 'home' && <Home onNavigate={navigate} />}
+            {view === 'gallery' && <Gallery />}
             {view === 'info' && <Info />}
           </motion.div>
         </AnimatePresence>
       </main>
 
       <Footer onNavigate={navigate} />
-
-      <ProjectDetail
-        project={activeProject}
-        onClose={() => setActiveProject(null)}
-      />
     </div>
   );
 }

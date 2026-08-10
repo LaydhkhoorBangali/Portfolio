@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 
 const links = [
-  { id: 'work', label: 'Work' },
+  { id: 'gallery', label: 'Gallery' },
   { id: 'info', label: 'Info' },
 ];
 

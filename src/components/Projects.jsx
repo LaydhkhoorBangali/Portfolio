@@ -2,23 +2,25 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useMemo, useState } from 'react';
 import { allProjects, formats } from '../data/projects.js';
 import FallbackImage from './FallbackImage.jsx';
+import GalleryLightbox from './GalleryLightbox.jsx';
 
 function ProjectTile({ project, index, onOpen }) {
   return (
     <motion.li
       className="work-tile"
       layout
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      exit={{ opacity: 0 }}
+      exit={{ opacity: 0, scale: 0.97 }}
       transition={{ delay: index * 0.05, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -6 }}
     >
       <button
         type="button"
         className="work-tile-btn"
-        onClick={() => onOpen(project)}
-        aria-label={`${project.shortTitle}, ${project.format}, ${project.year}`}
+        onClick={() => onOpen(index)}
+        aria-label={`Preview ${project.shortTitle}`}
       >
         <span className="work-tile-media">
           <FallbackImage
@@ -27,14 +29,23 @@ function ProjectTile({ project, index, onOpen }) {
             alt={project.poster.alt}
             loading="lazy"
           />
+          <span className="work-tile-veil" aria-hidden="true" />
+          <span className="work-tile-hover">
+            <span className="work-tile-hover-title">{project.shortTitle}</span>
+            <span className="work-tile-hover-meta">
+              {project.format} · {project.year}
+            </span>
+            <span className="work-tile-hover-cta">Preview</span>
+          </span>
         </span>
       </button>
     </motion.li>
   );
 }
 
-export default function Projects({ onOpenProject }) {
+export default function Projects() {
   const [filter, setFilter] = useState('All');
+  const [previewIndex, setPreviewIndex] = useState(null);
 
   const visible = useMemo(() => {
     if (filter === 'All') return allProjects;
@@ -42,10 +53,10 @@ export default function Projects({ onOpenProject }) {
   }, [filter]);
 
   return (
-    <section id="work" className="work" aria-labelledby="work-heading">
+    <section id="gallery-grid" className="work" aria-labelledby="gallery-filters">
       <div className="work-head">
-        <h2 id="work-heading" className="visually-hidden">
-          Work
+        <h2 id="gallery-filters" className="visually-hidden">
+          Gallery filters
         </h2>
 
         <div className="work-filters" role="tablist" aria-label="Filter by format">
@@ -59,7 +70,10 @@ export default function Projects({ onOpenProject }) {
                   role="tab"
                   aria-selected={active}
                   className={active ? 'work-filter is-active' : 'work-filter'}
-                  onClick={() => setFilter(format)}
+                  onClick={() => {
+                    setFilter(format);
+                    setPreviewIndex(null);
+                  }}
                 >
                   {format}
                 </button>
@@ -76,11 +90,18 @@ export default function Projects({ onOpenProject }) {
               key={project.id}
               project={project}
               index={index}
-              onOpen={onOpenProject}
+              onOpen={setPreviewIndex}
             />
           ))}
         </AnimatePresence>
       </motion.ul>
+
+      <GalleryLightbox
+        projects={visible}
+        index={previewIndex}
+        onClose={() => setPreviewIndex(null)}
+        onChangeIndex={setPreviewIndex}
+      />
     </section>
   );
 }
