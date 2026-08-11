@@ -4,46 +4,45 @@ import { allProjects, formats } from '../data/projects.js';
 import FallbackImage from './FallbackImage.jsx';
 import GalleryLightbox from './GalleryLightbox.jsx';
 
-function ProjectTile({ project, index, onOpen }) {
+function WorkCard({ project, index, onOpen }) {
   return (
     <motion.li
-      className="work-tile"
+      className="work-card"
       layout
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
       exit={{ opacity: 0, scale: 0.97 }}
       transition={{ delay: index * 0.05, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      whileHover={{ y: -6 }}
     >
       <button
         type="button"
-        className="work-tile-btn"
+        className="work-card-btn"
         onClick={() => onOpen(index)}
-        aria-label={`Preview ${project.shortTitle}`}
+        aria-label={`View ${project.shortTitle}`}
       >
-        <span className="work-tile-media">
+        <span className="work-card-media">
           <FallbackImage
             src={project.poster.src}
             fallback={project.poster.fallback}
             alt={project.poster.alt}
             loading="lazy"
           />
-          <span className="work-tile-veil" aria-hidden="true" />
-          <span className="work-tile-hover">
-            <span className="work-tile-hover-title">{project.shortTitle}</span>
-            <span className="work-tile-hover-meta">
-              {project.format} · {project.year}
-            </span>
-            <span className="work-tile-hover-cta">Preview</span>
+        </span>
+        <span className="work-card-meta">
+          <span className="work-card-top">
+            <span>{project.format}</span>
+            <span>{project.year}</span>
           </span>
+          <span className="work-card-title">{project.shortTitle}</span>
+          <span className="work-card-credit">{project.credit}</span>
         </span>
       </button>
     </motion.li>
   );
 }
 
-export default function Projects() {
+export default function Works({ showIntro = false }) {
   const [filter, setFilter] = useState('All');
   const [previewIndex, setPreviewIndex] = useState(null);
 
@@ -53,13 +52,20 @@ export default function Projects() {
   }, [filter]);
 
   return (
-    <section id="gallery-grid" className="work" aria-labelledby="gallery-filters">
-      <div className="work-head">
-        <h2 id="gallery-filters" className="visually-hidden">
-          Gallery filters
+    <section id="works" className="works" aria-labelledby="works-heading">
+      {showIntro ? (
+        <div className="works-intro">
+          <p className="works-kicker">Works</p>
+          <h2 id="works-heading">Selected works</h2>
+        </div>
+      ) : (
+        <h2 id="works-heading" className="visually-hidden">
+          Works
         </h2>
+      )}
 
-        <div className="work-filters" role="tablist" aria-label="Filter by format">
+      <div className="works-head">
+        <div className="work-filters" role="tablist" aria-label="Filter works by format">
           {formats.map((format, index) => {
             const active = filter === format;
             return (
@@ -83,10 +89,10 @@ export default function Projects() {
         </div>
       </div>
 
-      <motion.ul className="work-grid" layout>
+      <motion.ul className="works-grid" layout>
         <AnimatePresence mode="popLayout">
           {visible.map((project, index) => (
-            <ProjectTile
+            <WorkCard
               key={project.id}
               project={project}
               index={index}

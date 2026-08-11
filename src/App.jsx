@@ -7,6 +7,7 @@ import Grain from './components/Grain.jsx';
 import Header from './components/Header.jsx';
 import Home from './components/Home.jsx';
 import Info from './components/Info.jsx';
+import WorksPage from './components/WorksPage.jsx';
 
 const pageTransition = {
   initial: { opacity: 0, y: 28, filter: 'blur(8px)' },
@@ -26,8 +27,17 @@ const pageTransition = {
 
 export default function App() {
   const [view, setView] = useState('home');
+  const [scrollToWorks, setScrollToWorks] = useState(0);
 
   const navigate = (target) => {
+    if (target === 'works-section') {
+      if (view !== 'home') {
+        setView('home');
+      }
+      setScrollToWorks((value) => value + 1);
+      return;
+    }
+
     setView(target);
 
     window.requestAnimationFrame(() => {
@@ -55,7 +65,8 @@ export default function App() {
             animate="animate"
             exit="exit"
           >
-            {view === 'home' && <Home onNavigate={navigate} />}
+            {view === 'home' && <Home scrollToWorks={scrollToWorks} />}
+            {view === 'works' && <WorksPage />}
             {view === 'gallery' && <Gallery />}
             {view === 'info' && <Info />}
           </motion.div>
